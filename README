@@ -1,0 +1,32 @@
+# GimmeMyComics (GMC)
+
+This tool fetches different web comics, packages them in a simple email, and
+ships the email to designed addresses.
+
+The configuration is in `gmc.config`, which is a YAML file. This file contains:
+
+- `message_body` - a string (that Perl evaluates), which will be substituted for
+  the message body
+- `from_address` - if needed, the address of the aledged sender
+- `send_to_emails` - a list of emails to which the comics will be sent to. First
+  one goes to `To:` field, while the rest is in `Bcc:`
+- `subject` - self explanatory :)
+- `timezone` - your's timezone, defaults to 'local'
+- `comics` - a list of your comics. If a comics' name starts with two
+  underscores (`__`), the comic will be skipped.
+
+This tool tries to fetch the latest comics from the web. These comics are
+usually images which reside at some URLs. In turn, these URLs have dates or
+counters or whatnot embedded, to designate the latest comic. Thus, the
+configuration describes how to fetch the latest strip. The fields are:
+
+- `type`: defines the type of designator (date, counter, mixed, frompagedate, frompagecounter);
+- `url`: contains the URL of where to look for the comic. `%s` in URL will be
+  replaced by the designator;
+- `ident`: the format of the designator. If it is a date, you can put something
+  like `%Y%m%d` and the tool will replace it with the right date 
+- `last`: the last used designator
+- `pattern`: in case the type is `frompage`-kind, GMC first fetches the
+  HTML code (as opposed to the actual image). Then, it tries to find the strip's
+  image name, using the pattern. Use Perl's regex capture `()` to specify what
+  is the filename.
